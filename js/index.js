@@ -1,6 +1,4 @@
-// No Library
-// Also, I developed a Google Chrome App 
-// https://goo.gl/1450r
+
 
 function $(el) {return document.getElementById(el.replace(/#/,''));};
 
