@@ -48,36 +48,47 @@ canvas.addEventListener('mouseup', draw, false);
 canvas.addEventListener('touchstart', draw, false);
 canvas.addEventListener('touchmove', draw, false);
 canvas.addEventListener('touchend', draw, false);
+
 var name;
+var db = firebase.firestore();
 
 var go = function(e) {
-    name = prompt("Enter a word:", "");
+  	name = prompt("Enter your name:", "");
     this.parentNode.removeChild(this);
     draw(e);
-    var  myVar = setTimeout(alertFunc, 6000);
-    var  myVar = setTimeout(alertFunc, 12000);
-    var  myVar = setTimeout(alertFunc, 18000);
-    var  myVar = setTimeout(answer, 24000);
+
+    var  myVar = setTimeout(end, 4000);
    
     
 };
+function storeData(name, img){
+db.collection("users").doc("one").set({
+    name: name,
+    img: img,
+})
+.then(function() {
+    console.log("Document successfully written!");
+})
+.catch(function(error) {
+    console.error("Error writing document: ", error);
+});
 
-function alertFunc() {
-    alert("Next Person!");
+
+
+}
+
+function end() {
+  		
+    var canvas = document.getElementById("mycanvas");
+	var img    = canvas.toDataURL("image/png");
+	storeData(name, img);
+	alert("Picture Saved");
+   
   
   }
 
-  function answer() {
-    alert("Next Person!");
-    var answer = prompt("Enter the word:", "");
-    if(name == answer){
-        alert("You win");
-    }
-    else{
-        alert("You lose");
-    }
-  
-  }
+
+
 
 $('#go').addEventListener('mousedown', go, false);
 $('#go').addEventListener('touchstart', go, false);
