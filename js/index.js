@@ -62,9 +62,11 @@ var go = function(e) {
     
 };
 function storeData(name, img){
-db.collection("users").doc("one").set({
+db.collection("users").doc().set({
     name: name,
-    img: img,
+    img: img
+
+
 })
 .then(function() {
     console.log("Document successfully written!");
@@ -78,10 +80,9 @@ db.collection("users").doc("one").set({
 }
 
 function end() {
-  		
-    var canvas = document.getElementById("mycanvas");
-	var img    = canvas.toDataURL("image/png");
-	storeData(name, img);
+  	alert("Picture Saved");
+	var dataURL = canvas.toDataURL();
+	storeData(name, dataURL);
 	alert("Picture Saved");
    
   
