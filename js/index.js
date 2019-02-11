@@ -57,7 +57,9 @@ var go = function(e) {
     this.parentNode.removeChild(this);
     draw(e);
 
-    var  myVar = setTimeout(end, 4000);
+    var  myVar = setTimeout(end, 5000);
+    
+    
    
     
 };
@@ -79,8 +81,10 @@ db.collection("users").doc().set({
 
 }
 
+
+
 function end() {
-  	alert("Picture Saved");
+  	
 	var dataURL = canvas.toDataURL();
 	storeData(name, dataURL);
 	alert("Picture Saved");
