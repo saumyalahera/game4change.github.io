@@ -57,7 +57,7 @@ var go = function(e) {
     this.parentNode.removeChild(this);
     draw(e);
 
-    var  myVar = setTimeout(end, 5000);
+    var  myVar = setTimeout(end, 6000);
     
     
    
@@ -101,7 +101,7 @@ $('#go').addEventListener('touchstart', go, false);
 // prevent elastic scrolling
 document.body.addEventListener('touchmove', function(e) {
     e.preventDefault();
-}, false);
+}, true);
 // end body:touchmove
 window.onresize = function(e) {
     canvas.width = document.body.clientWidth;
