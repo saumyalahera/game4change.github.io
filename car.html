@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+    <!-- Head Tag starts -->
+    <head>
+        <meta name="viewport" content="user-scalable=no,initial-scale=1.0,maximum-scale=1.0" />
+        <style>
+            body { padding:10px; margin:0px; background-color: #ccc; }
+            #main { margin: 10px auto 0px auto; }
+            #car {
+                position: absolute;
+                top: 100px;
+                left: 100px;
+                width: 100px;
+                height: 100px;
+                background-color: black;
+            }
+        </style>
+    </head>
+    
+    <!-- Body tag -->
+    <body onload="askid()">
+        <p id="userid"> ID: </p>
+        <p id="car"></p>
+    </body>
+   
+    
+    <!-- Firebase App is always required and must be first -->
+    <script src="https://www.gstatic.com/firebasejs/5.8.2/firebase-app.js"></script>
+    
+    <!-- Add additional services that you want to use -->
+    <script src="https://www.gstatic.com/firebasejs/5.8.2/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.8.2/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.8.2/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.8.2/firebase-messaging.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.8.2/firebase-functions.js"></script>
+
+    
+    <script>
+        
+        /*------------------------------ SOME BASIC VARIABLES ------------------------------ */
+        /// This defines id for the car and that will be the
+        var scriptid = -1;
+        
+        /// Some screen coordinates
+        var screenWidth = window.screen.availWidth;
+        var screenHeight = window.screen.availHeight;
+        
+        function basicSetup(carid) {
+            var carheight = document.getElementById("car").style.height;
+            document.getElementById(carid).style.top = ""+((screenHeight/2)-(carheight/2))+"px";
+        }
+    
+    
+    
+
+        /*  ------------------------------ WINDOW ALERT ------------------------------  */
+        /// This defines id for the car and that will be the
+        function askid() {
+            var txt;
+            var id = prompt("Please enter your id:", "0");
+            if (id == null || id == "") {
+               //Print some error
+            } else {
+                scriptid=id;
+                document.getElementById("userid").innerHTML = "UserID: "+id;
+                basicSetup('car');
+                //Probably send it to the server. In future
+            }
+           
+        }
+        
+        
+        /*  ------------------------------ FIREBASE ------------------------------  */
+        /*  This is the configuration that is necessary to setup Firebase*/
+        //This is just to initialize the Firebase
+        var config = {
+            apiKey: "AIzaSyBQdoWaXa7sQR4ygDgRIWKgPvro8lGr0Jg",
+            authDomain: "paradigm-a42bc.firebaseapp.com",
+            databaseURL: "https://paradigm-a42bc.firebaseio.com",
+            projectId: "paradigm-a42bc",
+            storageBucket: "paradigm-a42bc.appspot.com",
+            messagingSenderId: "745403935875"
+        };
+    
+        /// Firebase setup
+        firebase.initializeApp(config);
+    
+        //Root object
+        /*  This is checking if there are objects and they will be placed on a right plane or not.*/
+        var root = firebase.database().ref('livecar');
+        root.on('value', function(snap) {
+                var value = snap.val();
+                console.log(snap.val());
+                if(value.counter == 1 && value.movecar == parseInt(scriptid)) {
+                //Things have got started
+                startAnimationX();
+                document.getElementById("userid").innerHTML = "UserID: car started";
+                }
+            //THIS IS THE PLACE TO CHECK IF THE
+            //If the animation is yes
+        });
+        
+        /*  This is the counter that will set the live current counter*/
+        ///
+        function writeUserData(id, counter_x, movecar_x) {
+            var number = parseInt(counter_x);
+            number++;
+            firebase.database().ref(id).set({
+            counter: number,
+            movecar: movecar_x
+            });
+        }
+    
+        //Testing
+        //writeUserData('livecar',19);
+        
+        /*  ------------------------------ ANIMATIONS ------------------------------*/
+        ///Animation started
+        var animate = false;
+        var carleft = -100;
+        var carmovementk=40;
+        
+        function resetCar() {
+            carleft = -100;
+            moveCar(carleft);
+            document.getElementById("userid").innerHTML = "UserID: car stopped";
+        }
+    
+        function moveCar(left_x) {
+            document.getElementById("car").style.left = ""+left_x+"px";
+        }
+        
+        function startAnimationX() {
+            if(animate == false) {
+                //CAll the timer
+                var x = setInterval(function() {
+                      //ANIMATE
+                        if(carleft > (screenWidth+100)){
+                            //CALL THE API AND CLEAR THE ANIMATION
+                            writeUserData('livecar',scriptid, 1);
+                            clearInterval(x);
+                        }
+                        carleft+=carmovementk;
+                        moveCar(carleft);
+                        document.getElementById("userid").innerHTML = "UserID: "+carleft;
+                }, 100);
+                animate=true;
+            }
+        }
+        
+        //startAnimationX();
+        //moveCar(900);
+        
+       
+    </script>
+    
+</html>
+
